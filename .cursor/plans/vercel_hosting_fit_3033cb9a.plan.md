@@ -1,6 +1,6 @@
 ---
 name: Vercel hosting fit
-overview: At ~42k unique visitors a month, this light Next.js masjid site will stay well under Vercel Hobby traffic caps. Start on Hobby, watch usage, and keep flyer images off Vercel so a later VM-backed flyer feed does not blow the free limits.
+overview: Host the public site on Vercel Hobby. Put the flyer DB and automation API on a DigitalOcean Droplet (~$15/mo with backups and built-in monitoring), not Contabo. Do not self-host Beszel or Uptime Kuma on the same box.
 todos:
   - id: deploy-hobby
     content: Deploy on Vercel Hobby (GitHub import, env vars, optional custom domain)
@@ -14,6 +14,11 @@ todos:
   - id: upgrade-trigger
     content: Move to Pro only if a cap is approached, a pause happens, or you want a no-pause guarantee
     status: pending
+  - id: do-droplet
+    content: "Provision DigitalOcean 2GB Droplet (NYC) + weekly backups + Monitoring + Cloud Firewall; Postgres on localhost, API on 443 with a shared secret"
+    status: pending
+  - id: skip-selfhost-monitor
+    content: Use DigitalOcean alerts (and optionally free UptimeRobot) — do not install Beszel or Uptime Kuma on the same VM
 isProject: false
 ---
 
@@ -81,6 +86,65 @@ Hobby is written as personal / non-commercial. Official fair-use text treats **a
 3. **Do not enable Vercel Web Analytics / Speed Insights** unless you accept those event caps. They are not required for the site to run.
 4. **When flyers land:** fetch JSON on the server with `revalidate` (minutes, not every request). Point `<img>` / `next/image` at the VM or a dedicated image host. Do not proxy flyer binaries through Vercel.
 5. **Upgrade trigger:** move to **Pro ($20/mo, usage continues instead of pause)** if any meter hits ~80%, if a bot/scrape event pauses you once, or if you later want team seats / guaranteed uptime. Pro is insurance, not a traffic necessity at 42k users.
+
+## Flyer VM: skip Contabo, use DigitalOcean
+
+Budget you chose: **up to ~$20/mo** if backups and monitoring are included and you babysit less. Region: no preference — default **NYC** (close to Durham, fine for Vercel).
+
+### How secure is Contabo?
+
+Contabo is not “unsafe” in the sense that they read your disk. The problem is **they sell a cheap, dense VPS and leave almost all security and ops to you**.
+
+- **Oversell:** lots of RAM/disk on paper; CPU steal and noisy neighbors are common. Fine for a toy box. Weak for a DB the public site depends on.
+- **Fewer cloud primitives:** no first-class firewall/VPC/alerts like DO or Hetzner. You bolt on UFW, Beszel, Kuma yourself.
+- **IP reputation:** budget ASNs get reused IPs; more likely to land on blocklists (hurts mail; can annoy some WAFs).
+- **Support:** slower when the box is actually compromised or the host is on fire.
+- **Backups:** extra, easy to skip. That is how flyer DBs die.
+
+A locked-down Contabo box can be fine. It will not be *more* secure than Hetzner/DO, and it will be *more* work. For a masjid automation API + Postgres, skip it.
+
+**Important:** Beszel and Uptime Kuma are not a Contabo requirement. They are self-hosted tools. Putting Uptime Kuma **on the same VPS you are watching** is the wrong design — if the box dies, monitoring dies with it.
+
+### Pick: DigitalOcean Droplet (~$14–16/mo)
+
+This stays under $20 and is the option that actually includes the extras you do not want to run yourself:
+
+- **$12** — Basic Droplet, 2 GB RAM / 1 vCPU / 50 GB SSD, NYC
+- **+$2.40** — weekly automated backups (20%)
+- **$0** — Monitoring + alert policies (CPU, disk, bandwidth)
+- **$0** — Cloud Firewall + VPC
+- **Total ~$14.40/mo** (daily backups would be ~$15.60)
+
+Harden it once (this matters more than the vendor logo):
+
+- SSH keys only; disable password login
+- Cloud Firewall: 22 from your IP, 443 from the world (or Cloudflare). **Never expose Postgres (5432) to the internet**
+- Postgres on `localhost` only; API and DB on the same Droplet
+- API requires a shared secret; Vercel sends it on the cached flyer fetch
+- Unattended security updates; keep Docker/Postgres patched
+- `pg_dump` to DigitalOcean Spaces or another off-box location in addition to weekly disk backups
+
+Do **not** install Beszel or Uptime Kuma on this Droplet. Use DO alert emails. Optionally add a free **UptimeRobot** HTTP check on `/health` from outside. That replaces Kuma.
+
+```mermaid
+flowchart LR
+  vercel[Vercel Hobby] -->|"SSR cached JSON + secret"| api[Droplet API :443]
+  api --> pg[Postgres localhost]
+  visitor[Visitor] --> vercel
+  visitor --> images[Flyer images on Spaces or the Droplet]
+  uptime[UptimeRobot free] -->|"GET /health"| api
+  doMon[DO Monitoring alerts] --> api
+```
+
+### Other affordable options (not chosen)
+
+- **Hetzner Cloud CX23 (Falkenstein or Ashburn):** often **~$7–12** with backups + Cloud Firewall. Steadier than Contabo, better reputation. Console graphs are thinner than DO; you would still use free UptimeRobot. Pick this only if you want to save ~$5 and accept a slightly more DIY panel. Hetzner US signup can ask for ID.
+- **Linode/Akamai 2 GB:** similar to DO (~$12 + backups). Fine substitute.
+- **Contabo Cloud VPS:** cheapest RAM/disk. Skip for this.
+- **Oracle always-free ARM:** $0 but flaky accounts and not worth production risk for JIAR.
+- **Managed Postgres** (DO $15+, Neon, etc.): you said you want the DB **on your VM**, so this is out of scope.
+
+You still have ~$5 of the $20 budget for DigitalOcean Spaces if flyer images should not live on the Droplet disk.
 
 ## What would change the answer
 
