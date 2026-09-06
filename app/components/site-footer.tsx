@@ -21,7 +21,7 @@ export function SiteFooter() {
     <>
       <footer className="site-footer">
         <div className="jiar-container">
-          <div className="grid gap-[32px] [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+          <div className="grid gap-[32px] [grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))]">
             <div>
               <span className="column-label">About us</span>
               <p className="mt-3 mb-0 text-[15px] leading-[1.6] text-[color:var(--muted-foreground)]">

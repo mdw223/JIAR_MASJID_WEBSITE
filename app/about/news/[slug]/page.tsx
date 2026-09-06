@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/app/components/page-shell";
@@ -39,6 +40,15 @@ export default async function NewsPostPage({ params }: Props) {
         <time className="column-label tabular mt-6 block">{formatDate(post.date)}</time>
         <h1 className="mt-2">{post.title}</h1>
         {post.excerpt && <p className="lede mt-6">{post.excerpt}</p>}
+        {post.image && (
+          <Image
+            src={post.image}
+            alt={post.title}
+            width={1000}
+            height={1000}
+            className="mt-6 w-full max-w-[520px] rounded-[var(--radius,8px)] border border-[color:var(--hairline)]"
+          />
+        )}
         <p className="body-secondary mt-6 max-w-[62ch]">
           Full article content will be migrated from the current website. Check back soon
           or visit{" "}

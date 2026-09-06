@@ -4,6 +4,7 @@ export type NewsPost = {
   date: string;
   excerpt?: string;
   externalUrl?: string;
+  image?: string;
 };
 
 export const newsPosts: NewsPost[] = [
@@ -12,30 +13,35 @@ export const newsPosts: NewsPost[] = [
     title: "Eid Al-Adha 1447 / 2026",
     date: "2026-05-22",
     excerpt: "Eid Al-Adha 1447AH announcement for the JIAR community.",
+    image: "/images/news-eid-al-adha-1447-2026.jpg",
   },
   {
     slug: "ramadan-announcement-2026",
     title: "Ramadan Announcement",
     date: "2026-02-17",
     excerpt: "Ramadan moon sighting announcement for 1447AH.",
+    image: "/images/news-ramadan-announcement-2026.jpg",
   },
   {
     slug: "full-time-imam-position",
     title: "Full Time Imam Position",
     date: "2025-10-22",
     excerpt: "JIAR is seeking a full-time Imam to serve our growing community.",
+    image: "/images/news-full-time-imam-position.jpg",
   },
   {
     slug: "retirement-imam-zouhri",
     title: "Retirement of Shk. Abdenasser Zouhri as JIAR Imam",
     date: "2025-10-22",
     excerpt: "Announcement regarding the retirement of Sheikh Abdenasser Zouhri.",
+    image: "/images/news-retirement-imam-zouhri.jpg",
   },
   {
     slug: "eid-al-adha-1446-2025",
     title: "Eid Al-Adha 1446/2025 Announcement",
     date: "2025-05-27",
     excerpt: "Eid Al-Adha 1446AH celebration details.",
+    image: "/images/news-eid-al-adha-1446-2025.png",
   },
   {
     slug: "eid-al-fitr-1446",

@@ -58,10 +58,11 @@
   --shadow-overlay: 0 16px 32px -12px rgba(24, 28, 25, 0.24);
   --shadow-card-hover: 0 12px 24px -16px rgba(24, 28, 25, 0.35);
 
-  /* layout metrics */
+  /* layout metrics — fluid so the same tokens serve phone and desktop */
   --container: 1200px;
-  --gutter: 24px;
-  --region-padding: 72px;
+  --gutter: clamp(18px, 4vw, 24px);
+  --region-padding: clamp(44px, 7vw, 72px);
+  --header-height: 64px;
 }
 
 /* The theme is authored light-first. These overrides keep the existing
@@ -93,13 +94,27 @@
 
 html {
   scroll-behavior: smooth;
+  /* Phones must never letter-scale the type, and nothing should be able to
+     push the page sideways. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* `clip`, not `hidden`: it contains stray horizontal overflow without
+     turning the root into a scroll container, so the sticky header stays
+     sticky. */
+  overflow-x: clip;
+}
+
+/* Anything the sticky header would otherwise cover when jumped to. */
+:target,
+[id] {
+  scroll-margin-top: calc(var(--header-height) + 16px);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-jakarta), "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: 17px;
+  font-size: clamp(16px, 0.4vw + 15px, 17px);
   line-height: 1.65;
 }
 
@@ -107,6 +122,12 @@ body {
    layer so any component that owns its own link colour — nav items, menu
    links, inverted cards — wins without needing to out-specify it. */
 @layer base {
+  /* Email addresses, URLs and long place names break rather than widen the
+     column they sit in. */
+  .jiar {
+    overflow-wrap: break-word;
+  }
+
   .jiar a {
     text-decoration: none;
   }
@@ -144,12 +165,12 @@ body {
   }
 
   .jiar h2 {
-    font-size: 34px;
+    font-size: clamp(26px, 4.4vw, 34px);
     line-height: 1.15;
   }
 
   .jiar h3 {
-    font-size: 30px;
+    font-size: clamp(23px, 3.6vw, 30px);
     line-height: 1.2;
   }
 
@@ -175,14 +196,14 @@ body {
 
   .lede {
     max-width: 60ch;
-    font-size: 18px;
+    font-size: clamp(16.5px, 1.4vw, 18px);
     line-height: 1.6;
   }
 
   .section-description {
     max-width: 62ch;
     margin-top: 10px;
-    font-size: 17px;
+    font-size: clamp(15.5px, 1.3vw, 17px);
     line-height: 1.6;
     color: var(--muted-foreground);
   }
@@ -241,11 +262,14 @@ body {
   }
 
   /* ------------------------------------------------------------ layout */
+  /* The gutter also clears a notched phone's rounded corners in landscape,
+     which `viewportFit: cover` otherwise lets content slide under. */
   .jiar-container {
     width: 100%;
     max-width: var(--container);
     margin-inline: auto;
-    padding-inline: var(--gutter);
+    padding-left: max(var(--gutter), env(safe-area-inset-left));
+    padding-right: max(var(--gutter), env(safe-area-inset-right));
   }
 
   .region {
@@ -280,7 +304,7 @@ body {
   }
 
   .section-head {
-    margin-bottom: 30px;
+    margin-bottom: clamp(22px, 3vw, 30px);
   }
 
   /* ---------------------------------------------------------- surfaces */
@@ -288,7 +312,7 @@ body {
     border-radius: 14px;
     border: 1px solid var(--border);
     background: var(--card);
-    padding: 22px;
+    padding: clamp(16px, 4vw, 22px);
   }
 
   .card > * + * {
@@ -334,6 +358,7 @@ body {
   .card-flush {
     padding: 0;
     overflow: hidden;
+    container-type: inline-size;
   }
 
   .card-flush > * + * {
@@ -342,7 +367,7 @@ body {
 
   .card-header {
     background: var(--muted);
-    padding: 16px 20px;
+    padding: 14px clamp(16px, 3.5vw, 20px);
     border-bottom: 1px solid var(--border);
   }
 
@@ -351,7 +376,7 @@ body {
   }
 
   .card-body {
-    padding: 20px;
+    padding: clamp(16px, 3.5vw, 20px);
   }
 
   .card-title {
@@ -376,6 +401,22 @@ body {
     background: var(--muted);
   }
 
+  /* A label/value pair on one line. The value sits right on a wide row and
+     drops flush under its label once the row has to wrap. */
+  .pair-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 2px 16px;
+  }
+
+  @media (max-width: 520px) {
+    .pair-row {
+      justify-content: flex-start;
+    }
+  }
+
   /* A live/status strip: one baseline, tinted, ruled off below. */
   .status-strip {
     display: flex;
@@ -384,27 +425,38 @@ body {
     gap: 6px 14px;
     background: var(--muted);
     border-bottom: 1px solid var(--border);
-    padding: 16px 20px;
+    padding: 14px clamp(16px, 3.5vw, 20px);
   }
 
   .status-name {
     font-family: var(--font-source-serif), "Source Serif 4", Georgia, serif;
-    font-size: 28px;
+    font-size: clamp(17px, 4cqw, 28px);
     font-weight: 600;
     line-height: 1.1;
     color: var(--title-on-tint);
   }
 
   .status-value {
-    font-size: 22px;
+    font-size: clamp(14px, 3.2cqw, 22px);
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     color: var(--ink);
   }
 
   .status-qualifier {
-    font-size: 15px;
+    font-size: clamp(11px, 2.6cqw, 15px);
     color: var(--muted-foreground);
+  }
+
+  /* The "Next iqamah" label and the Gregorian/Hijri date line sit in the
+     same flush card as the table, so they shrink with the card's own
+     width — not the viewport — same as the status row above them. */
+  .status-strip .column-label {
+    font-size: clamp(9px, 2.2cqw, 11px);
+  }
+
+  .prayer-meta-row .meta {
+    font-size: clamp(11px, 2.4cqw, 13.5px);
   }
 
   /* ----------------------------------------------------------- buttons */
@@ -426,8 +478,21 @@ body {
   }
 
   .btn-lg {
-    padding: 14px 30px;
+    padding: 14px clamp(22px, 5vw, 30px);
     font-size: 16px;
+  }
+
+  /* Touch devices get a 44px target and buttons that never spill their row. */
+  @media (pointer: coarse) {
+    .btn {
+      min-height: 44px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .btn-lg {
+      width: 100%;
+    }
   }
 
   .btn-primary {
@@ -491,13 +556,26 @@ body {
 
   .input {
     width: 100%;
+    min-height: 44px;
     border-radius: 8px;
     border: 1px solid var(--border);
     background: var(--background);
     padding: 10px 14px;
     font-family: inherit;
-    font-size: 15.5px;
+    /* 16px on small screens: anything less makes iOS Safari zoom the page
+       when the field takes focus. */
+    font-size: max(16px, 15.5px);
     color: var(--ink);
+  }
+
+  @media (min-width: 768px) {
+    .input {
+      font-size: 15.5px;
+    }
+  }
+
+  textarea.input {
+    min-height: 120px;
   }
 
   .input:focus {
@@ -519,19 +597,41 @@ body {
   }
 
   /* ------------------------------------------------------- data tables */
+  /* The wrapper every wide table sits in. It scrolls sideways on its own
+     rather than dragging the page with it, and the fade on the right edge
+     tells the reader there is more table to reach. */
+  .table-scroll {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    background:
+      linear-gradient(to right, var(--card) 30%, transparent) left center,
+      linear-gradient(to left, var(--card) 30%, transparent) right center,
+      radial-gradient(farthest-side at 0 50%, rgba(24, 28, 25, 0.12), transparent) left center,
+      radial-gradient(farthest-side at 100% 50%, rgba(24, 28, 25, 0.12), transparent) right center;
+    background-repeat: no-repeat;
+    background-size: 36px 100%, 36px 100%, 12px 100%, 12px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
+
+  /* Sized off real viewport widths (320-768px), not a floor that goes flat
+     the moment 1.5vw drops below it — so the whole table keeps shrinking
+     as the phone narrows instead of jumping once at a single breakpoint. */
   .data-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 18px;
-    line-height: 1.4;
-    letter-spacing: 0.01em;
+    font-size: clamp(10px, 4.3px + 1.8vw, 18px);
+    line-height: 1.3;
+    letter-spacing: 0;
+    word-spacing: -0.08em;
     font-variant-numeric: tabular-nums;
     color: var(--ink);
   }
 
   .data-table th,
   .data-table td {
-    padding: 14px 16px;
+    padding: clamp(5px, 1.6vw, 14px) clamp(2.5px, -7.2px + 3vw, 16px);
+    white-space: nowrap;
     text-align: left;
     vertical-align: middle;
     border-top: 1px solid var(--hairline);
@@ -540,15 +640,18 @@ body {
   .data-table thead th {
     border-top: 0;
     border-bottom: 1px solid var(--border);
-    padding-block: 10px;
-    font-size: 11.5px;
+    padding-block: clamp(6px, 1.3vw, 10px);
+    font-size: clamp(8px, 5px + 0.9vw, 11.5px);
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--ink-faint);
     white-space: nowrap;
   }
 
+  /* Sans throughout — the same face used in the nav, buttons and body copy
+     everywhere else on the site, so the table reads as familiar rather
+     than introducing a second voice for one column. */
   .data-table tbody th {
     font-weight: 600;
     color: var(--ink);
@@ -558,11 +661,44 @@ body {
     font-weight: 500;
   }
 
+  /* A border, not a fill, marks the seam between the two masjid column
+     groups — consistent with rules-not-boxes elsewhere in the table. */
+  .data-table .group-start {
+    border-left: 1px solid var(--border);
+  }
+
+  /* Athan is informational; Iqamah is the number a reader actually acts
+     on. Dimming Athan lets Iqamah's existing bold weight read as the
+     answer, not just one of five columns. */
+  .data-table .muted-time {
+    color: var(--muted-foreground);
+  }
+
+  /* Sunrise isn't a prayer or an iqamah — set it apart so it doesn't
+     compete with the rows that matter. */
+  .data-table tr.is-sunrise th,
+  .data-table tr.is-sunrise td {
+    color: var(--ink-faint);
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  /* Opt a column back out of nowrap where the content is words, not times. */
+  .data-table .wrap {
+    white-space: normal;
+  }
+
   .data-table .key-value {
     font-weight: 600;
   }
 
-  /* The one salient row: bolder label, amber ink on its key values. */
+  /* The one salient row: the same tint convention as .status-strip marks
+     it as "live," plus a bolder label and amber ink on its key values —
+     so it reads as a distinct band, not just heavier text among rules. */
+  .data-table tr.is-current {
+    background: var(--muted);
+  }
+
   .data-table tr.is-current th {
     font-weight: 700;
   }
@@ -570,6 +706,10 @@ body {
   .data-table tr.is-current .key-value {
     font-weight: 700;
     color: var(--accent-ink);
+  }
+
+  .data-table tr.is-current .muted-time {
+    color: var(--muted-foreground);
   }
 
   /* ------------------------------------------------------- site header */
@@ -586,8 +726,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    min-height: 72px;
+    gap: 12px;
+    min-height: var(--header-height);
+  }
+
+  @media (min-width: 768px) {
+    .topbar {
+      gap: 16px;
+      min-height: 72px;
+    }
   }
 
   .nav {
@@ -623,6 +770,16 @@ body {
     color: var(--primary);
   }
 
+  /* The full nav appears at 1024px, where it only just fits beside the logo
+     and the donate button. Tightening it through to 1280px keeps a margin
+     so a longer label can never push the row into a wrap. */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .nav-item {
+      padding-inline: 9px;
+      font-size: 14.5px;
+    }
+  }
+
   .nav-chevron {
     width: 11px;
     height: 11px;
@@ -635,6 +792,9 @@ body {
     left: 0;
     z-index: 60;
     min-width: 250px;
+    max-width: calc(100vw - 2 * var(--gutter));
+    max-height: calc(100vh - var(--header-height) - 24px);
+    overflow-y: auto;
     list-style: none;
     margin: 0;
     padding: 6px;
@@ -673,20 +833,26 @@ body {
     color: var(--ink-faint);
   }
 
+  /* The drawer scrolls itself rather than the page behind it, and never
+     grows past the space under the header. */
   .mobile-nav {
     border-top: 1px solid var(--border);
     background: var(--background);
     padding: 8px 0 16px;
+    max-height: calc(100dvh - var(--header-height));
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .mobile-nav a,
   .mobile-nav button {
     display: block;
     width: 100%;
+    min-height: 44px;
     border: 0;
     border-radius: 6px;
     background: none;
-    padding: 10px 12px;
+    padding: 11px 12px;
     text-align: left;
     font-family: inherit;
     font-size: 15px;
@@ -714,7 +880,7 @@ body {
   .site-footer {
     background: var(--muted);
     border-top: 1px solid var(--border);
-    padding-block: 56px;
+    padding-block: clamp(40px, 6vw, 56px);
     font-size: 15px;
   }
 

@@ -31,7 +31,7 @@ export default function DonatePage() {
           <p className="section-description">
             Select a category to contribute through our secure donation portal.
           </p>
-          <div className="mt-[30px] grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(250px,1fr))]">
+          <div className="mt-[30px] grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr))]">
             {donationCategories.map((category, index) => (
               <a
                 key={category.id}
