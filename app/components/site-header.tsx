@@ -126,7 +126,7 @@ export function SiteHeader() {
               alt={siteConfig.name}
               width={200}
               height={60}
-              className="h-[42px] w-auto"
+              className="h-9 w-auto sm:h-[42px]"
               priority
             />
           </Link>
@@ -150,7 +150,7 @@ export function SiteHeader() {
             <ThemeToggle />
             <button
               type="button"
-              className="rounded-[6px] p-2 text-[color:var(--ink)] hover:bg-[color:var(--hover-tint)] lg:hidden"
+              className="flex h-11 w-11 items-center justify-center rounded-[6px] text-[color:var(--ink)] hover:bg-[color:var(--hover-tint)] lg:hidden"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle menu"
               aria-expanded={mobileOpen}

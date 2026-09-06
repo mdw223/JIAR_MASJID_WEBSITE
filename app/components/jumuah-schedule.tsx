@@ -39,7 +39,7 @@ export function JumuahSchedule() {
         </p>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="table-scroll">
         <table className="data-table">
           <thead>
             <tr>
@@ -54,8 +54,8 @@ export function JumuahSchedule() {
                 <th scope="row" className="key-value whitespace-nowrap">
                   {row.time}
                 </th>
-                <td>{row.imam}</td>
-                <td>{row.location}</td>
+                <td className="wrap">{row.imam}</td>
+                <td className="wrap">{row.location}</td>
               </tr>
             ))}
           </tbody>
