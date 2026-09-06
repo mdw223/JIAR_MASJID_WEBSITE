@@ -15,58 +15,65 @@ export const metadata: Metadata = {
 export default function DonatePage() {
   return (
     <PageShell>
-      <Section id="donate" title="Donation" description={`${donationIntro.email}`}>
-        <div className="max-w-3xl space-y-4">
+      <Section
+        id="donate"
+        title="Donation"
+        description="Support the masjids, the education programmes and the families JIAR serves."
+      >
+        <div className="prose flex flex-col gap-4">
           {donationIntro.paragraphs.map((p) => (
-            <p key={p.slice(0, 50)} className="text-muted-foreground leading-relaxed">
-              {p}
-            </p>
+            <p key={p.slice(0, 50)}>{p}</p>
           ))}
         </div>
 
-        <div className="mt-10">
-          <h3 className="text-lg font-semibold">Donation Categories</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
+        <div className="mt-[56px]">
+          <h3>Donation categories</h3>
+          <p className="section-description">
             Select a category to contribute through our secure donation portal.
           </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {donationCategories.map((category) => (
+          <div className="mt-[30px] grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(250px,1fr))]">
+            {donationCategories.map((category, index) => (
               <a
                 key={category.id}
                 href={category.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group rounded-xl border border-border bg-card p-5 transition-shadow hover:border-primary hover:shadow-md"
+                className={`card card-link ${index === 0 ? "card-invert" : ""}`}
               >
-                <h4 className="font-semibold group-hover:text-primary">{category.name}</h4>
-                <p className="mt-2 text-sm text-muted-foreground">{category.description}</p>
-                <span className="mt-3 inline-block text-sm font-medium text-accent">
-                  Donate →
+                <span className="card-title">{category.name}</span>
+                <span
+                  className={
+                    index === 0
+                      ? "block text-[15.5px] leading-[1.55] text-[rgba(255,255,255,0.82)]"
+                      : "body-secondary block"
+                  }
+                >
+                  {category.description}
                 </span>
+                <span className="link-arrow block">Donate →</span>
               </a>
             ))}
           </div>
         </div>
 
-        <div className="mt-10 rounded-xl border border-border bg-muted/30 p-6">
-          <p className="text-sm text-muted-foreground">
-            You can also donate via PayPal:
+        <div className="card mt-[56px] bg-[color:var(--muted)]">
+          <span className="card-title">Prefer PayPal?</span>
+          <p className="body-secondary">
+            You can also give through our PayPal account.
           </p>
           <a
             href={alternateDonationUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-3 inline-flex rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground hover:opacity-90"
+            className="btn btn-primary mt-1"
           >
             Donate via PayPal
           </a>
         </div>
 
-        <p className="mt-8 text-sm text-muted-foreground">
+        <p className="body-secondary mt-8">
           Questions? Email{" "}
-          <a href={`mailto:${donationIntro.email}`} className="text-primary hover:underline">
-            {donationIntro.email}
-          </a>
+          <a href={`mailto:${donationIntro.email}`}>{donationIntro.email}</a>
         </p>
       </Section>
     </PageShell>

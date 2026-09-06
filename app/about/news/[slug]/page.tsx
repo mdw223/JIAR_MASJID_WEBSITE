@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/app/components/page-shell";
-import { Section } from "@/app/components/section";
 import { newsPosts } from "@/data/news";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -33,28 +32,22 @@ export default async function NewsPostPage({ params }: Props) {
 
   return (
     <PageShell>
-      <Section id="post">
-        <Link href="/about/news" className="text-sm text-primary hover:underline">
-          ← Back to News
+      <article>
+        <Link href="/about/news" className="link-arrow link-muted">
+          ← Back to news
         </Link>
-        <time className="mt-4 block text-sm text-muted-foreground">{formatDate(post.date)}</time>
-        <h1 className="mt-2 text-3xl font-bold">{post.title}</h1>
-        {post.excerpt && (
-          <p className="mt-6 text-muted-foreground leading-relaxed">{post.excerpt}</p>
-        )}
-        <p className="mt-6 text-sm text-muted-foreground">
-          Full article content will be migrated from the current website. Check back soon or visit{" "}
-          <a
-            href="https://ibadarrahman.org/news/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary hover:underline"
-          >
+        <time className="column-label tabular mt-6 block">{formatDate(post.date)}</time>
+        <h1 className="mt-2">{post.title}</h1>
+        {post.excerpt && <p className="lede mt-6">{post.excerpt}</p>}
+        <p className="body-secondary mt-6 max-w-[62ch]">
+          Full article content will be migrated from the current website. Check back soon
+          or visit{" "}
+          <a href="https://ibadarrahman.org/news/" target="_blank" rel="noopener noreferrer">
             ibadarrahman.org
           </a>{" "}
           for the complete post.
         </p>
-      </Section>
+      </article>
     </PageShell>
   );
 }

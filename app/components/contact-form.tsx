@@ -25,8 +25,7 @@ const initialState: FormState = {
   website: "",
 };
 
-const inputClass =
-  "w-full rounded border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20";
+const inputClass = "input";
 
 export function ContactForm() {
   const [form, setForm] = useState<FormState>(initialState);
@@ -59,21 +58,25 @@ export function ContactForm() {
   }
 
   return (
-    <section id="contact" className="border-t border-border bg-muted/30 py-16 sm:py-24">
-      <div className="mx-auto max-w-2xl px-4 sm:px-6">
-        <h2 className="text-3xl font-bold">Contact</h2>
-        <p className="mt-2 text-muted-foreground">Send us a message and we&apos;ll get back to you.</p>
+    <section id="contact" className="region region-tint">
+      <div className="jiar-container max-w-[720px]">
+        <div className="section-head">
+          <h2>Contact</h2>
+          <p className="section-description">
+            Send us a message and we&apos;ll get back to you.
+          </p>
+        </div>
 
         {siteConfig.phone && (
-          <p className="mt-4 text-sm">
+          <p className="body-secondary mb-6">
             Or call{" "}
-            <a href={formatPhoneLink(siteConfig.phone)} className="font-medium text-primary hover:underline">
+            <a href={formatPhoneLink(siteConfig.phone)} className="tabular">
               {formatPhoneDisplay(siteConfig.phone)}
             </a>
           </p>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4 rounded-lg border border-border bg-card p-6">
+        <form onSubmit={handleSubmit} className="card space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Name" required>
               <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputClass} />
@@ -109,10 +112,18 @@ export function ContactForm() {
             <textarea required rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={inputClass} />
           </Field>
           <input type="text" name="website" value={form.website} onChange={(e) => setForm({ ...form, website: e.target.value })} className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-          {status === "success" && <p className="text-sm text-green-600 dark:text-green-400">Message sent. We&apos;ll be in touch soon.</p>}
-          {status === "error" && <p className="text-sm text-red-600 dark:text-red-400">{errorMessage}</p>}
-          <button type="submit" disabled={status === "loading"} className="rounded bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-60">
-            {status === "loading" ? "Sending..." : "Send Message"}
+          {status === "success" && (
+            <p className="form-note">Message sent. We&apos;ll be in touch soon.</p>
+          )}
+          {status === "error" && (
+            <p className="form-note form-note-error">{errorMessage}</p>
+          )}
+          <button
+            type="submit"
+            disabled={status === "loading"}
+            className="btn btn-primary disabled:opacity-60"
+          >
+            {status === "loading" ? "Sending…" : "Send message"}
           </button>
         </form>
       </div>
@@ -123,7 +134,7 @@ export function ContactForm() {
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium">{label}{required && " *"}</label>
+      <label className="field-label">{label}{required && " *"}</label>
       {children}
     </div>
   );

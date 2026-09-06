@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function NewsPage() {
   return (
     <PageShell>
-      <Section id="news" title="Recent News & Updates" description="Announcements and updates from JIAR.">
+      <Section id="news" title="Recent news" description="Announcements and updates from Jamaat Ibad Ar-Rahman.">
         <NewsList />
       </Section>
     </PageShell>

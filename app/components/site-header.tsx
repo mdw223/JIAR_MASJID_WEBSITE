@@ -3,187 +3,186 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronDown, Menu, Minus, Plus, X } from "lucide-react";
 import { mainNavigation, type NavItem } from "@/data/navigation";
 import { siteConfig } from "@/app/lib/site-config";
-import { cn } from "@/app/lib/utils";
+import { ThemeToggle } from "@/app/components/theme-toggle";
 
-function NavDropdown({ item, onNavigate }: { item: NavItem; onNavigate?: () => void }) {
+function isExternal(href?: string) {
+  return Boolean(href?.startsWith("http"));
+}
+
+function externalProps(href?: string) {
+  return isExternal(href) ? { target: "_blank", rel: "noopener noreferrer" } : {};
+}
+
+/** One desktop top-level nav item plus its floating dropdown panel. */
+function DesktopMenuItem({ item, alignEnd }: { item: NavItem; alignEnd?: boolean }) {
   const [open, setOpen] = useState(false);
 
   if (!item.children) {
-    const isExternal = item.href?.startsWith("http");
     return (
-      <Link
-        href={item.href ?? "#"}
-        className="block rounded px-3 py-2 text-sm hover:bg-muted"
-        onClick={onNavigate}
-        {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      >
-        {item.label}
-      </Link>
+      <li>
+        <Link href={item.href ?? "#"} className="nav-item" {...externalProps(item.href)}>
+          {item.label}
+        </Link>
+      </li>
     );
   }
 
   return (
-    <div className="relative">
-      <button
-        type="button"
-        className="flex w-full items-center justify-between rounded px-3 py-2 text-sm hover:bg-muted"
-        onClick={() => setOpen(!open)}
-      >
+    <li onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+      <button type="button" className="nav-item" aria-expanded={open}>
         {item.label}
-        <svg
-          className={cn("h-4 w-4 transition-transform", open && "rotate-180")}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <ChevronDown className="nav-chevron" strokeWidth={2} aria-hidden="true" />
       </button>
       {open && (
-        <div className="ml-3 border-l border-border pl-2">
-          {item.children.map((child) => (
-            <NavDropdown key={child.label} item={child} onNavigate={onNavigate} />
-          ))}
-        </div>
+        <ul className={`menu-panel ${alignEnd ? "left-auto right-0" : ""}`}>
+          {item.children.map((child) =>
+            child.children ? (
+              <li key={child.label}>
+                <span className="menu-label">{child.label}</span>
+                <ul className="m-0 list-none p-0">
+                  {child.children.map((sub) => (
+                    <li key={sub.label}>
+                      <Link
+                        href={sub.href ?? "#"}
+                        className="menu-link"
+                        {...externalProps(sub.href)}
+                      >
+                        {sub.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ) : (
+              <li key={child.label}>
+                <Link
+                  href={child.href ?? "#"}
+                  className="menu-link"
+                  {...externalProps(child.href)}
+                >
+                  {child.label}
+                </Link>
+              </li>
+            ),
+          )}
+        </ul>
       )}
-    </div>
+    </li>
   );
 }
 
-function DesktopDropdown({ item }: { item: NavItem }) {
+/** Collapsible accordion row used inside the mobile drawer. */
+function MobileMenuItem({ item, onNavigate }: { item: NavItem; onNavigate: () => void }) {
   const [open, setOpen] = useState(false);
 
   if (!item.children) {
-    const isExternal = item.href?.startsWith("http");
     return (
-      <Link
-        href={item.href ?? "#"}
-        className="rounded px-3 py-2 text-sm font-medium text-foreground/80 hover:text-primary"
-        {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      >
+      <Link href={item.href ?? "#"} onClick={onNavigate} {...externalProps(item.href)}>
         {item.label}
       </Link>
     );
   }
 
   return (
-    <div
-      className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-    >
+    <>
       <button
         type="button"
-        className="flex items-center gap-1 rounded px-3 py-2 text-sm font-medium text-foreground/80 hover:text-primary"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className="flex items-center justify-between"
       >
-        {item.label}
-        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <span>{item.label}</span>
+        {open ? (
+          <Minus size={14} strokeWidth={2} aria-hidden="true" />
+        ) : (
+          <Plus size={14} strokeWidth={2} aria-hidden="true" />
+        )}
       </button>
       {open && (
-        <div className="absolute left-0 top-full z-50 min-w-[220px] rounded-lg border border-border bg-card py-2 shadow-lg">
-          {item.children.map((child) =>
-            child.children ? (
-              <div key={child.label} className="px-2">
-                <p className="px-3 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {child.label}
-                </p>
-                {child.children.map((sub) => (
-                  <Link
-                    key={sub.label}
-                    href={sub.href ?? "#"}
-                    className="block rounded px-3 py-1.5 text-sm hover:bg-muted"
-                    {...(sub.href?.startsWith("http")
-                      ? { target: "_blank", rel: "noopener noreferrer" }
-                      : {})}
-                  >
-                    {sub.label}
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <Link
-                key={child.label}
-                href={child.href ?? "#"}
-                className="block px-4 py-2 text-sm hover:bg-muted"
-                {...(child.href?.startsWith("http")
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
-              >
-                {child.label}
-              </Link>
-            ),
-          )}
+        <div className="pl-4">
+          {item.children.map((child) => (
+            <MobileMenuItem key={child.label} item={child} onNavigate={onNavigate} />
+          ))}
         </div>
       )}
-    </div>
+    </>
   );
 }
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const lastIndex = mainNavigation.length - 1;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/images/jiar-logo.png"
-            alt={siteConfig.name}
-            width={140}
-            height={48}
-            className="h-10 w-auto"
-            priority
-          />
-        </Link>
-
-        <nav className="hidden items-center gap-1 lg:flex">
-          {mainNavigation.map((item) => (
-            <DesktopDropdown key={item.label} item={item} />
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <Link
-            href="/donate"
-            className="hidden rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 sm:inline-flex"
-          >
-            Donate Now
+    <header className="site-header">
+      <div className="jiar-container">
+        <div className="topbar">
+          <Link href="/" title={siteConfig.name} className="flex shrink-0 items-center">
+            <Image
+              src="/images/jiar-logo.png"
+              alt={siteConfig.name}
+              width={200}
+              height={60}
+              className="h-[42px] w-auto"
+              priority
+            />
           </Link>
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-md p-2 hover:bg-muted lg:hidden"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+          <nav className="hidden lg:block">
+            <ul className="nav">
+              {mainNavigation.map((item, index) => (
+                <DesktopMenuItem
+                  key={item.label}
+                  item={item}
+                  alignEnd={index >= lastIndex - 1}
+                />
+              ))}
+            </ul>
+          </nav>
+
+          <div className="flex shrink-0 items-center gap-2">
+            <Link href="/donate" className="btn btn-primary hidden sm:inline-flex">
+              Donate now
+            </Link>
+            <ThemeToggle />
+            <button
+              type="button"
+              className="rounded-[6px] p-2 text-[color:var(--ink)] hover:bg-[color:var(--hover-tint)] lg:hidden"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
+            >
               {mobileOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <X size={20} strokeWidth={2} aria-hidden="true" />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <Menu size={20} strokeWidth={2} aria-hidden="true" />
               )}
-            </svg>
-          </button>
+            </button>
+          </div>
         </div>
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-border bg-background px-4 py-4 lg:hidden">
-          <nav className="space-y-1">
+        <div className="mobile-nav lg:hidden">
+          <div className="jiar-container">
             {mainNavigation.map((item) => (
-              <NavDropdown key={item.label} item={item} onNavigate={() => setMobileOpen(false)} />
+              <MobileMenuItem
+                key={item.label}
+                item={item}
+                onNavigate={() => setMobileOpen(false)}
+              />
             ))}
-          </nav>
-          <Link
-            href="/donate"
-            className="mt-4 block rounded-md bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground"
-            onClick={() => setMobileOpen(false)}
-          >
-            Donate Now
-          </Link>
+            <Link
+              href="/donate"
+              onClick={() => setMobileOpen(false)}
+              className="btn btn-primary mt-3 w-full sm:hidden"
+            >
+              Donate now
+            </Link>
+          </div>
         </div>
       )}
     </header>
