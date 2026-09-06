@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Source_Serif_4 } from "next/font/google";
 import { ThemeProvider } from "@/app/components/theme-provider";
 import { siteConfig } from "@/app/lib/site-config";
@@ -38,6 +38,18 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   icons: { icon: "/images/jiar-logo.png", apple: "/images/jiar-logo.png" },
+};
+
+/** Full-width on every phone, with the browser chrome tinted to match the
+ *  active theme. `maximumScale` is left alone so users can still pinch-zoom. */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d150f" },
+  ],
 };
 
 export default function RootLayout({

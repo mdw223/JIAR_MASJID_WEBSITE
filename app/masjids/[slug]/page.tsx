@@ -37,7 +37,7 @@ export default async function MasjidPage({ params }: Props) {
   return (
     <PageShell>
       <Section id="masjid" title={location.name} description={formatAddress(location)}>
-        <div className="grid gap-8 [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
+        <div className="grid gap-8 [grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))]">
           <div>
             <p className="prose">{location.description}</p>
 
@@ -56,7 +56,7 @@ export default async function MasjidPage({ params }: Props) {
             </ul>
 
             <dl className="row-list mt-7">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <div className="pair-row">
                 <dt className="column-label">Phone</dt>
                 <dd className="text-[16.5px] font-medium">
                   <a href={formatPhoneLink(location.phone)} className="tabular">
@@ -64,7 +64,7 @@ export default async function MasjidPage({ params }: Props) {
                   </a>
                 </dd>
               </div>
-              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <div className="pair-row">
                 <dt className="column-label">Directions</dt>
                 <dd className="text-[16.5px] font-medium">
                   <a

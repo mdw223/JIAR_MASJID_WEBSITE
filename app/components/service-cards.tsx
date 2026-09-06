@@ -15,7 +15,7 @@ const icons = {
  */
 export function ServiceCards() {
   return (
-    <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(250px,1fr))]">
+    <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr))]">
       {services.map((service) => {
         const Icon = icons[service.icon as keyof typeof icons] ?? BookOpen;
         const featured = "featured" in service && service.featured;

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 const buttonClass =
-  "flex h-9 w-9 items-center justify-center rounded-[6px] text-[color:var(--muted-foreground)] hover:bg-[color:var(--hover-tint)] hover:text-[color:var(--primary)]";
+  "flex h-11 w-11 items-center sm:h-9 sm:w-9 justify-center rounded-[6px] text-[color:var(--muted-foreground)] hover:bg-[color:var(--hover-tint)] hover:text-[color:var(--primary)]";
 
 export function ThemeToggle() {
   const { setTheme, resolvedTheme } = useTheme();

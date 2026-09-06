@@ -19,13 +19,9 @@ export default function Home() {
           <div className="section-head">
             <span className="eyebrow">Prayer</span>
             <h2 className="mt-2">Prayer times</h2>
-            <p className="section-description">
-              Today&apos;s athan and iqamah times at both masjids, and this week&apos;s
-              Jumu&apos;ah shifts.
-            </p>
           </div>
 
-          <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(480px,1fr))]">
+          <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(min(480px,100%),1fr))]">
             <PrayerTimesTable />
             <JumuahSchedule />
           </div>
@@ -84,7 +80,7 @@ export default function Home() {
       {/* Masjid updates and staying connected — tinted ground */}
       <section className="region region-tint">
         <div className="jiar-container">
-          <div className="grid gap-8 [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
+          <div className="grid gap-8 [grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))]">
             <div>
               <span className="eyebrow">Masjid updates</span>
               <h2 className="mt-2 mb-[28px]">Fayetteville St. renovation</h2>

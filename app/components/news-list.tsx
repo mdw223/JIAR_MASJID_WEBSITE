@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { newsPosts } from "@/data/news";
 
@@ -23,16 +24,27 @@ export function NewsList({ limit }: { limit?: number }) {
           <Link
             key={post.slug}
             href={`/about/news/${post.slug}`}
-            className="row-hover block border-t border-[color:var(--hairline)] px-5 py-[18px] first:border-t-0"
+            className="row-hover flex items-start gap-4 border-t border-[color:var(--hairline)] px-[clamp(16px,3.5vw,20px)] py-4 first:border-t-0"
           >
-            <time className="column-label tabular">{formatDate(post.date)}</time>
-            <span className="list-title mt-2 block">{post.title}</span>
-            {post.excerpt && (
-              <span className="body-secondary mt-1.5 block">{post.excerpt}</span>
+            {post.image && (
+              <Image
+                src={post.image}
+                alt=""
+                width={96}
+                height={96}
+                className="mt-1 h-[72px] w-[72px] shrink-0 rounded-[var(--radius,6px)] border border-[color:var(--hairline)] object-cover"
+              />
             )}
-            <span className="link-arrow mt-2 block text-[color:var(--primary)]">
-              Read more →
-            </span>
+            <div className="min-w-0 flex-1">
+              <time className="column-label tabular">{formatDate(post.date)}</time>
+              <span className="list-title mt-2 block">{post.title}</span>
+              {post.excerpt && (
+                <span className="body-secondary mt-1.5 block">{post.excerpt}</span>
+              )}
+              <span className="link-arrow mt-2 block text-[color:var(--primary)]">
+                Read more →
+              </span>
+            </div>
           </Link>
         ))}
       </div>

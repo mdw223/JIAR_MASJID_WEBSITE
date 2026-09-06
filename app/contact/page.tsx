@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 /** One label/value pair on its own ruled row inside a card. */
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+    <div className="pair-row">
       <dt className="column-label">{label}</dt>
       <dd className="text-[16.5px] font-medium text-[color:var(--ink)]">{children}</dd>
     </div>
@@ -31,7 +31,7 @@ export default function ContactPage() {
         title="Contact us"
         description="Reach out to JIAR for inquiries, services, or general questions."
       >
-        <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(330px,1fr))]">
+        <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr))]">
           <div className="card card-flush">
             <div className="card-header">
               <span className="card-title">General contact</span>
