@@ -62,17 +62,13 @@ export function Hero() {
       <div className="pattern-dark absolute inset-0" />
       <div className="hero-glow" aria-hidden />
       <div className="region-dark relative bg-transparent">
-        <div className="jiar-container py-[clamp(56px,9vw,110px)]">
+        <div className="jiar-container py-[clamp(36px,6vw,72px)]">
           <span className="eyebrow eyebrow-on-dark">{siteConfig.name}</span>
-          <h1 className="mt-3">Two masjids, one community</h1>
-          <div className="mt-4">
+          <h1 className="mt-3 text-[clamp(1.75rem,4vw,2.75rem)]">Two masjids, one community</h1>
+          <div className="mt-3">
             <TypewriterTagline />
           </div>
-          <p className="mt-3 mb-0 max-w-[52ch] text-[16px] leading-[1.6] text-[rgba(255,255,255,0.78)]">
-            The adhan calls five times a day in Durham. Come to pray, to learn,
-            or simply to sit a while — the doors are open.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap gap-3">
             <Link href="/donate" className="btn btn-primary btn-glow btn-lg">
               Donate now
             </Link>

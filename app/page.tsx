@@ -43,7 +43,7 @@ export default function Home() {
         <div className="jiar-container">
           <div className="section-head">
             <span className="eyebrow">Announcements</span>
-            <h2 className="mt-2">Latest from the jamaat</h2>
+            <h2 className="mt-2">Recent Posts</h2>
             <p className="section-description">
               Prayer time changes, events and community notices from JIAR.
             </p>
