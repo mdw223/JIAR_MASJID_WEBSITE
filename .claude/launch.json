@@ -4,7 +4,7 @@
     {
       "name": "jiar-masjid-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "JIAR_MASJID_WEBSITE-main"],
+      "runtimeArgs": ["run", "dev"],
       "port": 3000,
       "autoPort": true
     }
