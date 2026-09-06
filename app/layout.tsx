@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Source_Serif_4 } from "next/font/google";
 import { ThemeProvider } from "@/app/components/theme-provider";
 import { siteConfig } from "@/app/lib/site-config";
 import "./globals.css";
 
-const plusJakarta = Plus_Jakarta_Sans({
+/** Everything functional: body, nav, buttons, labels, tables, footer. */
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-plus-jakarta",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
+
+/** The voice: page and section headings, wordmarks, hero-scale numbers. */
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-source-serif",
   display: "swap",
 });
 
@@ -35,7 +45,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${plusJakarta.variable} antialiased`}>
+      <body className={`${jakarta.variable} ${sourceSerif.variable} antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

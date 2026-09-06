@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Check } from "lucide-react";
 import { PageShell } from "@/app/components/page-shell";
 import { PrayerTimesTable } from "@/app/components/prayer-times-table";
 import { Section } from "@/app/components/section";
@@ -36,54 +37,61 @@ export default async function MasjidPage({ params }: Props) {
   return (
     <PageShell>
       <Section id="masjid" title={location.name} description={formatAddress(location)}>
-        <div className="grid gap-8 lg:grid-cols-2">
+        <div className="grid gap-8 [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
           <div>
-            <p className="text-muted-foreground leading-relaxed">{location.description}</p>
-            <ul className="mt-6 space-y-2">
+            <p className="prose">{location.description}</p>
+
+            <ul className="row-list mt-7 list-none p-0">
               {location.highlights.map((h) => (
-                <li key={h} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <span className="mt-1 text-primary">✓</span>
-                  {h}
+                <li key={h} className="flex items-start gap-2.5">
+                  <Check
+                    size={14}
+                    strokeWidth={2}
+                    className="mt-[5px] shrink-0 text-[color:var(--primary)]"
+                    aria-hidden="true"
+                  />
+                  <span className="body-secondary">{h}</span>
                 </li>
               ))}
             </ul>
-            <dl className="mt-6 space-y-2 text-sm">
-              <div>
-                <dt className="text-muted-foreground">Phone</dt>
-                <dd>
-                  <a href={formatPhoneLink(location.phone)} className="font-medium text-primary hover:underline">
+
+            <dl className="row-list mt-7">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <dt className="column-label">Phone</dt>
+                <dd className="text-[16.5px] font-medium">
+                  <a href={formatPhoneLink(location.phone)} className="tabular">
                     {formatPhoneDisplay(location.phone)}
                   </a>
                 </dd>
               </div>
-              <div>
-                <dt className="text-muted-foreground">Directions</dt>
-                <dd>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <dt className="column-label">Directions</dt>
+                <dd className="text-[16.5px] font-medium">
                   <a
                     href={location.googleMapsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-medium text-primary hover:underline"
                   >
-                    View on Google Maps
+                    View on Google Maps →
                   </a>
                 </dd>
               </div>
             </dl>
           </div>
+
           <div>
-            <h3 className="mb-4 text-lg font-semibold">Prayer Times</h3>
+            <h3 className="mb-[28px]">Prayer times</h3>
             <PrayerTimesTable />
           </div>
         </div>
       </Section>
 
-      <Section id="jumuah" title="Jumu'ah Schedule" className="bg-muted/30">
+      <Section id="jumuah" title="Jumu'ah schedule">
         <JumuahSchedule />
       </Section>
 
       {slug === "fayetteville" && (
-        <Section id="construction" title="Renovation Update">
+        <Section id="construction" title="Renovation update">
           <ConstructionUpdate />
         </Section>
       )}

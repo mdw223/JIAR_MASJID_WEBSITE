@@ -5,64 +5,142 @@ import { Hero } from "@/app/components/hero";
 import { JumuahSchedule } from "@/app/components/jumuah-schedule";
 import { NewsList } from "@/app/components/news-list";
 import { PrayerTimesTable } from "@/app/components/prayer-times-table";
-import { Section } from "@/app/components/section";
 import { ServiceCards } from "@/app/components/service-cards";
+import { siteConfig } from "@/app/lib/site-config";
 
 export default function Home() {
   return (
-    <PageShell>
+    <PageShell bare>
       <Hero />
 
-      <Section id="prayer-times" title="Prayer Times" description="Daily athan and iqamah times for both masjid locations.">
-        <PrayerTimesTable />
-      </Section>
+      {/* Prayer — the two schedules side by side on the white ground */}
+      <section className="region">
+        <div className="jiar-container">
+          <div className="section-head">
+            <span className="eyebrow">Prayer</span>
+            <h2 className="mt-2">Prayer times</h2>
+            <p className="section-description">
+              Today&apos;s athan and iqamah times at both masjids, and this week&apos;s
+              Jumu&apos;ah shifts.
+            </p>
+          </div>
 
-      <Section
-        id="services"
-        title="Services We Offer"
-        description="Programs and services for the JIAR community."
-        className="bg-muted/30"
-      >
-        <ServiceCards />
-      </Section>
+          <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(480px,1fr))]">
+            <PrayerTimesTable />
+            <JumuahSchedule />
+          </div>
 
-      <Section id="jumuah" title="Friday Prayer Schedule" description="Jumu'ah prayer times at both locations.">
-        <JumuahSchedule />
-      </Section>
-
-      <Section
-        id="news"
-        title="Recent News & Updates"
-        description="Latest announcements from JIAR."
-        className="bg-muted/30"
-      >
-        <NewsList limit={5} />
-        <div className="mt-6 text-center">
-          <Link
-            href="/about/news"
-            className="inline-flex rounded-md border border-primary px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary hover:text-primary-foreground"
-          >
-            View All News
-          </Link>
+          <div className="mt-7">
+            <Link href="/services/prayers" className="btn btn-outline">
+              Monthly prayer timings
+            </Link>
+          </div>
         </div>
-      </Section>
+      </section>
 
-      <Section id="construction" title="Masjid Updates">
-        <ConstructionUpdate />
-      </Section>
+      {/* Announcements — tinted ground */}
+      <section className="region region-tint">
+        <div className="jiar-container">
+          <div className="section-head">
+            <span className="eyebrow">Announcements</span>
+            <h2 className="mt-2">Recent Posts</h2>
+            <p className="section-description">
+              Prayer time changes, events and community notices from JIAR.
+            </p>
+          </div>
 
-      <section className="bg-primary py-16 text-center text-primary-foreground">
-        <div className="mx-auto max-w-2xl px-4 sm:px-6">
-          <h2 className="text-2xl font-bold sm:text-3xl">Support Your Community</h2>
-          <p className="mt-3 text-primary-foreground/80">
-            Your donations help us maintain our masjids, run educational programs, and serve those in need.
+          <NewsList limit={5} />
+
+          <div className="mt-7">
+            <Link href="/about/news" className="btn btn-outline">
+              View all news →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Programmes */}
+      <section className="region">
+        <div className="jiar-container">
+          <div className="section-head">
+            <span className="eyebrow">Programmes</span>
+            <h2 className="mt-2">What we offer</h2>
+            <p className="section-description">
+              Education, funeral services, community support and the ongoing masjid
+              development project.
+            </p>
+          </div>
+
+          <ServiceCards />
+
+          <div className="mt-7">
+            <Link href="/events" className="btn btn-outline">
+              View full calendar →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Masjid updates and staying connected — tinted ground */}
+      <section className="region region-tint">
+        <div className="jiar-container">
+          <div className="grid gap-8 [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
+            <div>
+              <span className="eyebrow">Masjid updates</span>
+              <h2 className="mt-2 mb-[28px]">Fayetteville St. renovation</h2>
+              <ConstructionUpdate />
+            </div>
+
+            <div>
+              <span className="eyebrow">Stay connected</span>
+              <h2 className="mt-2 mb-[28px]">Join the community</h2>
+              <div className="card">
+                <p className="body-secondary">
+                  Join the JIAR WhatsApp group and follow us on social media for prayer
+                  time changes, event announcements and community updates.
+                </p>
+                <p className="body-secondary">
+                  Questions? Email{" "}
+                  <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>.
+                </p>
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <a
+                    href={siteConfig.social.whatsapp}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-outline"
+                  >
+                    Join WhatsApp
+                  </a>
+                  <a
+                    href={siteConfig.social.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-outline"
+                  >
+                    Watch on YouTube
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Closing appeal — the one dark emphasis ground below the hero */}
+      <section className="region region-dark pattern-dark">
+        <div className="jiar-container">
+          <span className="eyebrow eyebrow-on-dark">Support JIAR</span>
+          <h2 className="mt-2 max-w-[22ch]">Our masjid, our investment</h2>
+          <p className="lede mt-3 mb-0 text-[rgba(255,255,255,0.9)]">
+            Your donations help us maintain our masjids, run educational programs, and
+            serve those in need.
           </p>
-          <Link
-            href="/donate"
-            className="mt-6 inline-flex rounded-md bg-accent px-8 py-3 text-sm font-semibold text-accent-foreground hover:opacity-90"
-          >
-            Donate Now
-          </Link>
+          <div className="mt-8">
+            <Link href="/donate" className="btn btn-primary btn-lg">
+              Donate now
+            </Link>
+          </div>
         </div>
       </section>
     </PageShell>

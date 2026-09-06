@@ -7,11 +7,9 @@ export function ContentPage({ page }: { page: PageContent }) {
   return (
     <PageShell>
       <Section id="content" title={page.title} description={page.description}>
-        <div className="prose prose-neutral max-w-3xl">
+        <div className="prose flex flex-col gap-4">
           {page.content.map((paragraph) => (
-            <p key={paragraph.slice(0, 40)} className="mb-4 text-muted-foreground leading-relaxed">
-              {paragraph}
-            </p>
+            <p key={paragraph.slice(0, 40)}>{paragraph}</p>
           ))}
         </div>
         {page.externalUrl && (
@@ -19,9 +17,9 @@ export function ContentPage({ page }: { page: PageContent }) {
             href={page.externalUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground hover:opacity-90"
+            className="btn btn-outline mt-7"
           >
-            Visit Official Website
+            Visit official website →
           </Link>
         )}
       </Section>

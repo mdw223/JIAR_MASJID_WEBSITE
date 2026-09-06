@@ -13,76 +13,67 @@ export const metadata: Metadata = {
   description: "Contact Jamaat Ibad Ar-Rahman.",
 };
 
+/** One label/value pair on its own ruled row inside a card. */
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+      <dt className="column-label">{label}</dt>
+      <dd className="text-[16.5px] font-medium text-[color:var(--ink)]">{children}</dd>
+    </div>
+  );
+}
+
 export default function ContactPage() {
   return (
     <PageShell>
-      <Section id="contact" title="Contact Us" description="Reach out to JIAR for inquiries, services, or general questions.">
-        <div className="grid gap-8 md:grid-cols-2">
-          <div className="rounded-xl border border-border bg-card p-6">
-            <h3 className="font-semibold">General Contact</h3>
-            <dl className="mt-4 space-y-3 text-sm">
-              <div>
-                <dt className="text-muted-foreground">Phone</dt>
-                <dd>
-                  <a href={formatPhoneLink(siteConfig.phone)} className="font-medium text-primary hover:underline">
-                    {formatPhoneDisplay(siteConfig.phone)}
-                  </a>
-                </dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">Email</dt>
-                <dd>
-                  <a href={`mailto:${siteConfig.email}`} className="font-medium text-primary hover:underline">
-                    {siteConfig.email}
-                  </a>
-                </dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">Donations</dt>
-                <dd>
-                  <a href={`mailto:${siteConfig.donateEmail}`} className="font-medium text-primary hover:underline">
-                    {siteConfig.donateEmail}
-                  </a>
-                </dd>
-              </div>
+      <Section
+        id="contact"
+        title="Contact us"
+        description="Reach out to JIAR for inquiries, services, or general questions."
+      >
+        <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(330px,1fr))]">
+          <div className="card card-flush">
+            <div className="card-header">
+              <span className="card-title">General contact</span>
+            </div>
+            <dl className="row-list card-body py-0">
+              <Row label="Phone">
+                <a href={formatPhoneLink(siteConfig.phone)} className="tabular">
+                  {formatPhoneDisplay(siteConfig.phone)}
+                </a>
+              </Row>
+              <Row label="Email">
+                <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+              </Row>
+              <Row label="Donations">
+                <a href={`mailto:${siteConfig.donateEmail}`}>{siteConfig.donateEmail}</a>
+              </Row>
             </dl>
           </div>
 
           {siteConfig.locations.map((location) => (
-            <div key={location.id} className="rounded-xl border border-border bg-card p-6">
-              <h3 className="font-semibold">{location.name}</h3>
-              <dl className="mt-4 space-y-3 text-sm">
-                <div>
-                  <dt className="text-muted-foreground">Address</dt>
-                  <dd>{formatAddress(location)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">Phone</dt>
-                  <dd>
-                    <a href={formatPhoneLink(location.phone)} className="font-medium text-primary hover:underline">
-                      {formatPhoneDisplay(location.phone)}
-                    </a>
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">Directions</dt>
-                  <dd>
-                    <a
-                      href={location.googleMapsUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-medium text-primary hover:underline"
-                    >
-                      View on Google Maps
-                    </a>
-                  </dd>
-                </div>
+            <div key={location.id} className="card card-flush">
+              <div className="card-header">
+                <span className="card-title">{location.name}</span>
+              </div>
+              <dl className="row-list card-body py-0">
+                <Row label="Address">{formatAddress(location)}</Row>
+                <Row label="Phone">
+                  <a href={formatPhoneLink(location.phone)} className="tabular">
+                    {formatPhoneDisplay(location.phone)}
+                  </a>
+                </Row>
+                <Row label="Directions">
+                  <a href={location.googleMapsUrl} target="_blank" rel="noopener noreferrer">
+                    View on Google Maps →
+                  </a>
+                </Row>
               </dl>
             </div>
           ))}
         </div>
 
-        <p className="mt-8 text-sm text-muted-foreground">
+        <p className="body-secondary mt-8">
           Contact form coming soon. For now, please call or email us directly.
         </p>
       </Section>
