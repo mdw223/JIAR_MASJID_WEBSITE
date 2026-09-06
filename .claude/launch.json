@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "jiar-masjid-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "JIAR_MASJID_WEBSITE-main"],
+      "port": 3000,
+      "autoPort": true
+    }
+  ]
+}

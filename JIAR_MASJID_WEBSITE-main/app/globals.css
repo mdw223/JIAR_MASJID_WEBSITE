@@ -1,0 +1,879 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-hairline: var(--hairline);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-ink: var(--accent-ink);
+  --color-surface-dark: var(--surface-dark);
+  --font-sans: var(--font-jakarta);
+  --font-serif: var(--font-source-serif);
+}
+
+/* ------------------------------------------------------------------
+   JIAR visual theme — warm institutional.
+
+   Deep evergreen plus a single amber accent, two light grounds and no
+   third, flat surfaces separated by borders rather than shadows, a
+   serif for voice and a geometric sans for everything functional.
+   ------------------------------------------------------------------ */
+:root {
+  /* core */
+  --surface-dark: #12442b;   /* full-bleed emphasis grounds, inverted cards */
+  --primary: #1b5e3b;        /* green as ink: links, icons, small titles */
+  --primary-hover: #144729;
+  --primary-foreground: #ffffff;
+  --accent: #e87722;         /* amber as a FILL only, always with white text */
+  --accent-foreground: #ffffff;
+  --accent-ink: #b45f11;     /* amber as text/ink on light surfaces */
+  --accent-on-dark: #f0a45f; /* amber ink/icons on --surface-dark */
+
+  /* neutrals */
+  --ink: #181c19;            /* headings and primary text */
+  --foreground: #3c463d;     /* long-form paragraphs */
+  --muted-foreground: #5c6b5c;
+  --ink-faint: #8a988a;
+  --border: #e2e8e2;         /* card and section borders */
+  --hairline: #eef2ee;       /* dividers inside a card or list */
+  --background: #ffffff;
+  --card: #ffffff;
+  --card-foreground: #181c19;
+  --muted: #f6f8f6;          /* the only alternate light ground */
+  --hover-tint: #f2f5f2;
+  --title-on-tint: #12442b;  /* card-header and status titles on the tint */
+
+  /* the only two shadows in the theme */
+  --shadow-overlay: 0 16px 32px -12px rgba(24, 28, 25, 0.24);
+  --shadow-card-hover: 0 12px 24px -16px rgba(24, 28, 25, 0.35);
+
+  /* layout metrics */
+  --container: 1200px;
+  --gutter: 24px;
+  --region-padding: 72px;
+}
+
+/* The theme is authored light-first. These overrides keep the existing
+   theme toggle working by re-pointing the same tokens at a dark ramp
+   built from the identical evergreen/amber pair. */
+.dark {
+  --surface-dark: #0e3522;
+  --primary: #6fbf92;
+  --primary-hover: #8fd3ac;
+  --primary-foreground: #0b1f14;
+  --accent: #e87722;
+  --accent-foreground: #ffffff;
+  --accent-ink: #f0a45f;
+  --accent-on-dark: #f0a45f;
+
+  --ink: #f0f4f1;
+  --foreground: #c4cfc6;
+  --muted-foreground: #93a396;
+  --ink-faint: #7a8a7d;
+  --border: #223528;
+  --hairline: #1b2b20;
+  --background: #0d150f;
+  --card: #131e17;
+  --card-foreground: #f0f4f1;
+  --muted: #101a13;
+  --hover-tint: #16231a;
+  --title-on-tint: #e6efe8;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-jakarta), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+/* Links are never underlined; they shift colour. This lives in the base
+   layer so any component that owns its own link colour — nav items, menu
+   links, inverted cards — wins without needing to out-specify it. */
+@layer base {
+  .jiar a {
+    text-decoration: none;
+  }
+
+  .jiar a:not(.btn) {
+    color: var(--primary);
+  }
+
+  .jiar a:not(.btn):hover {
+    color: var(--primary-hover);
+  }
+}
+
+@layer components {
+  /* --------------------------------------------------------- typography */
+  /* Serif is the voice: page and section headings, wordmarks, hero-scale
+     numbers and prayer names. Never a serif paragraph, never a sans
+     page heading. */
+  .jiar h1,
+  .jiar h2,
+  .jiar h3 {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-source-serif), "Source Serif 4", Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .jiar h1 {
+    max-width: 22ch;
+    font-size: clamp(34px, 5vw, 54px);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+  }
+
+  .jiar h2 {
+    font-size: 34px;
+    line-height: 1.15;
+  }
+
+  .jiar h3 {
+    font-size: 30px;
+    line-height: 1.2;
+  }
+
+  /* h4 and below are block titles — sans, not serif. */
+  .jiar h4,
+  .jiar h5,
+  .jiar h6 {
+    margin: 0;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .jiar p {
+    margin: 0 0 16px;
+  }
+
+  .jiar p:last-child {
+    margin-bottom: 0;
+  }
+
+  .lede {
+    max-width: 60ch;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .section-description {
+    max-width: 62ch;
+    margin-top: 10px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+
+  .prose,
+  .prose p {
+    max-width: 68ch;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--foreground);
+  }
+
+  .body-secondary {
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--muted-foreground);
+  }
+
+  .list-title {
+    font-size: 17.5px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--ink);
+  }
+
+  /* Uppercase tracking is used here and nowhere else. */
+  .eyebrow {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  .eyebrow-on-dark {
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .column-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .meta {
+    font-size: 13.5px;
+    color: var(--muted-foreground);
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ------------------------------------------------------------ layout */
+  .jiar-container {
+    width: 100%;
+    max-width: var(--container);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .region {
+    padding-block: var(--region-padding);
+  }
+
+  /* When the ground changes, the seam is a border. */
+  .region-tint {
+    background: var(--muted);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .region-dark {
+    background: var(--surface-dark);
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  .region-dark h1,
+  .region-dark h2,
+  .region-dark h3,
+  .region-dark h4 {
+    color: #ffffff;
+  }
+
+  .region-dark a:not(.btn) {
+    color: var(--accent-on-dark);
+  }
+
+  .region-dark a:not(.btn):hover {
+    color: #ffffff;
+  }
+
+  .section-head {
+    margin-bottom: 30px;
+  }
+
+  /* ---------------------------------------------------------- surfaces */
+  .card {
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    padding: 22px;
+  }
+
+  .card > * + * {
+    margin-top: 10px;
+  }
+
+  /* Exactly one card in a set gets this. Emphasis is colour, never size. */
+  .card-invert {
+    background: var(--surface-dark);
+    border-color: var(--surface-dark);
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .card-invert .card-title,
+  .card-invert h4 {
+    color: #ffffff;
+  }
+
+  .card-invert a:not(.btn),
+  .card-invert svg {
+    color: var(--accent-on-dark);
+  }
+
+  .card-invert a:not(.btn):hover {
+    color: #ffffff;
+  }
+
+  /* When the inverted card is itself the link, its arrow still reads amber. */
+  .card-invert .link-arrow {
+    color: var(--accent-on-dark);
+  }
+
+  /* A card that is itself a link — the only element that gains a shadow. */
+  .card-link {
+    display: block;
+    transition: box-shadow 0.15s ease;
+  }
+
+  .card-link:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .card-flush {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .card-flush > * + * {
+    margin-top: 0;
+  }
+
+  .card-header {
+    background: var(--muted);
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-header .card-title {
+    color: var(--title-on-tint);
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .card-title {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--ink);
+  }
+
+  /* Rows are separated by rules, not gaps or boxes. */
+  .row-list > * {
+    border-top: 1px solid var(--hairline);
+    padding-block: 13px;
+  }
+
+  .row-list > *:first-child {
+    border-top: 0;
+  }
+
+  .row-hover:hover {
+    background: var(--muted);
+  }
+
+  /* A live/status strip: one baseline, tinted, ruled off below. */
+  .status-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    background: var(--muted);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+  }
+
+  .status-name {
+    font-family: var(--font-source-serif), "Source Serif 4", Georgia, serif;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--title-on-tint);
+  }
+
+  .status-value {
+    font-size: 22px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  .status-qualifier {
+    font-size: 15px;
+    color: var(--muted-foreground);
+  }
+
+  /* ----------------------------------------------------------- buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 0;
+    border-radius: 8px;
+    padding: 11px 22px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .btn-lg {
+    padding: 14px 30px;
+    font-size: 16px;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  /* Fills darken; they never fade — opacity on amber over green muddies
+     the hue. */
+  .btn-primary:hover {
+    filter: brightness(0.93);
+    color: #ffffff;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+  }
+
+  .btn-outline:hover {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .btn-outline-dark {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #ffffff;
+  }
+
+  .btn-outline-dark:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+  }
+
+  /* Directional links end in a trailing arrow. */
+  .link-arrow {
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+
+  .link-muted {
+    color: var(--muted-foreground);
+  }
+
+  .link-muted:hover {
+    color: var(--primary);
+  }
+
+  /* ------------------------------------------------------------- forms */
+  .field-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .input {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--background);
+    padding: 10px 14px;
+    font-family: inherit;
+    font-size: 15.5px;
+    color: var(--ink);
+  }
+
+  .input:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+
+  .input::placeholder {
+    color: var(--ink-faint);
+  }
+
+  .form-note {
+    font-size: 15px;
+    color: var(--muted-foreground);
+  }
+
+  .form-note-error {
+    color: var(--accent-ink);
+  }
+
+  /* ------------------------------------------------------- data tables */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16.5px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 12px 14px;
+    text-align: left;
+    vertical-align: middle;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .data-table thead th {
+    border-top: 0;
+    border-bottom: 1px solid var(--border);
+    padding-block: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .data-table tbody th {
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .data-table tbody td {
+    font-weight: 500;
+  }
+
+  .data-table .key-value {
+    font-weight: 600;
+  }
+
+  /* The one salient row: bolder label, amber ink on its key values. */
+  .data-table tr.is-current th {
+    font-weight: 700;
+  }
+
+  .data-table tr.is-current .key-value {
+    font-weight: 700;
+    color: var(--accent-ink);
+  }
+
+  /* ------------------------------------------------------- site header */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--background) 92%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 72px;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav > li {
+    position: relative;
+  }
+
+  .nav-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .nav-item:hover {
+    background: var(--hover-tint);
+    color: var(--primary);
+  }
+
+  .nav-chevron {
+    width: 11px;
+    height: 11px;
+    opacity: 0.55;
+  }
+
+  .menu-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 60;
+    min-width: 250px;
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    box-shadow: var(--shadow-overlay);
+    text-align: left;
+  }
+
+  .menu-link {
+    display: block;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14.5px;
+    font-weight: 400;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .menu-link:hover {
+    background: var(--hover-tint);
+    color: var(--primary);
+  }
+
+  .menu-label {
+    display: block;
+    padding: 12px 12px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .mobile-nav {
+    border-top: 1px solid var(--border);
+    background: var(--background);
+    padding: 8px 0 16px;
+  }
+
+  .mobile-nav a,
+  .mobile-nav button {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    padding: 10px 12px;
+    text-align: left;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .mobile-nav a:hover,
+  .mobile-nav button:hover {
+    background: var(--hover-tint);
+    color: var(--primary);
+  }
+
+  /* A button inside the drawer stays a button. */
+  .mobile-nav a.btn-primary,
+  .mobile-nav a.btn-primary:hover {
+    background: var(--accent);
+    padding: 11px 22px;
+    text-align: center;
+    color: #ffffff;
+  }
+
+  /* ------------------------------------------------------- site footer */
+  .site-footer {
+    background: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-block: 56px;
+    font-size: 15px;
+  }
+
+  .site-footer a:not(.btn) {
+    color: var(--muted-foreground);
+  }
+
+  .site-footer a:not(.btn):hover {
+    color: var(--primary);
+  }
+
+  .footer-bottom {
+    background: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-block: 20px;
+    font-size: 15px;
+    color: var(--muted-foreground);
+  }
+
+  .social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+  }
+
+  .social-icons a:hover {
+    color: var(--primary);
+  }
+
+  /* --------------------------------------------------------------- hero */
+  /* The rotating tagline. "Your" is fixed; the word after it is typed and
+     deleted by TypewriterTagline. The slot holds the longest word's width
+     as hidden text so the caret slides inside a fixed box instead of
+     pushing the line around. */
+  .hero-tagline {
+    margin: 0;
+    font-size: clamp(1.15rem, 1.9vw, 1.55rem);
+    font-weight: 400;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .typewriter-slot {
+    position: relative;
+    display: inline-block;
+  }
+
+  .typewriter-ghost {
+    visibility: hidden;
+  }
+
+  .typewriter {
+    position: absolute;
+    inset: 0 auto 0 0;
+    white-space: pre;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--accent-on-dark);
+    /* The glow rides on the word itself — two soft amber halos, no blur
+       filter and no extra element, so it costs nothing to paint. */
+    text-shadow:
+      0 0 14px rgba(240, 164, 95, 0.45),
+      0 0 34px rgba(232, 119, 34, 0.28);
+  }
+
+  .typewriter.is-animating {
+    border-right: 2px solid var(--accent-on-dark);
+    padding-right: 2px;
+    animation: jiar-caret 900ms steps(1) infinite;
+  }
+
+  @keyframes jiar-caret {
+    50% {
+      border-color: transparent;
+    }
+  }
+
+  /* A single amber wash sitting behind the hero copy, breathing slowly.
+     One element, one compositor-only property animated — it never
+     triggers layout or paint. */
+  .hero-glow {
+    position: absolute;
+    top: -18%;
+    left: -12%;
+    width: min(760px, 90%);
+    aspect-ratio: 1;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 156, 74, 0.45),
+      rgba(232, 119, 34, 0.22) 40%,
+      rgba(232, 119, 34, 0.07) 62%,
+      transparent 75%
+    );
+    animation: jiar-breathe 9s ease-in-out infinite;
+  }
+
+  @keyframes jiar-breathe {
+    0%,
+    100% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.12);
+    }
+  }
+
+  /* --------------------------------------------------------------- glass */
+  /* Used only where there is a photograph behind it to refract — the hero's
+     secondary action. Everywhere else the theme stays flat. */
+  .btn-glass {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.32),
+      0 8px 24px -10px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .btn-glass:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.45);
+    color: #ffffff;
+  }
+
+  /* The primary hero action carries the same amber halo as the tagline,
+     and reaches for it on hover. */
+  .btn-glow {
+    box-shadow: 0 8px 26px -8px rgba(232, 119, 34, 0.6);
+    transition:
+      box-shadow 0.25s ease,
+      filter 0.15s ease;
+  }
+
+  .btn-glow:hover {
+    box-shadow: 0 12px 34px -6px rgba(232, 119, 34, 0.8);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-glow {
+      animation: none;
+      opacity: 0.7;
+    }
+
+    .typewriter.is-animating {
+      animation: none;
+    }
+  }
+
+  /* ----------------------------------------------------------- texture */
+  /* The brand's geometric tile is the only decorative texture, and it
+     goes on emphasis grounds only. */
+  .pattern-light {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231b5e3b' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .pattern-dark {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
