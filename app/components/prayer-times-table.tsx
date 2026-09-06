@@ -1,5 +1,13 @@
 import { getCombinedPrayerTimes } from "@/app/lib/prayer-times";
+import { locations } from "@/data/locations";
+import { MapPinned, Phone } from "lucide-react";
+const fayetteville = locations.find(
+  (location) => location.name === "Fayetteville St. Masjid"
+);
 
+const parkwood = locations.find(
+  (location) => location.name === "Parkwood Masjid"
+);
 export async function PrayerTimesTable() {
   const rows = await getCombinedPrayerTimes();
 
@@ -12,10 +20,47 @@ export async function PrayerTimesTable() {
               Prayer
             </th>
             <th className="border-l border-border px-4 py-3 text-center font-semibold text-primary" colSpan={2}>
-              Fayetteville St.
+              <div>Fayetteville St.</div>
+                <div className="mt-1 flex justify-center gap-3 text-xs font-normal">
+                  <a
+                    href={fayetteville?.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    <MapPinned className="h-3.5 w-3.5" />
+                    {fayetteville?.address}
+                  </a>
+                  <a
+                    href={`tel:${fayetteville?.phone}`}
+                    className="hover:underline"
+                  >
+                    <Phone className="h-3.5 w-3.5" />
+                    +1 {fayetteville?.phone}
+                  </a>
+                </div>
             </th>
             <th className="border-l border-border px-4 py-3 text-center font-semibold text-primary" colSpan={2}>
-              Parkwood
+              <div>Parkwood</div>
+                <div className="mt-1 flex justify-center gap-3 text-xs font-normal">
+                  <a
+                    href={parkwood?.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    <MapPinned className="h-3.5 w-3.5" />
+                    {parkwood?.address}
+                  </a>
+                  <a
+                    href={`tel:${parkwood?.phone}`}
+                    className="hover:underline"
+                  >
+                    <Phone className="h-3.5 w-3.5" />
+                    +1 {parkwood?.phone}
+                  </a>
+                </div>
+              
             </th>
           </tr>
           <tr className="border-b border-border bg-muted/30 text-xs text-muted-foreground">
