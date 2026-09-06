@@ -20,7 +20,15 @@ export function Hero() {
         fill
         priority
         sizes="100vw"
-        className="scale-110 object-cover object-center blur-sm"
+        className="scale-110 object-cover object-center"
+      />
+      <Image
+        src={HERO_IMAGE}
+        alt=""
+        aria-hidden
+        fill
+        sizes="100vw"
+        className="scale-110 object-cover object-center blur-xl [mask-image:radial-gradient(ellipse_55%_65%_at_center,transparent_35%,black_85%)] [-webkit-mask-image:radial-gradient(ellipse_55%_65%_at_center,transparent_35%,black_85%)]"
       />
       <div className="absolute inset-0 bg-[rgba(18,68,43,0.72)]" />
       <div className="pattern-dark absolute inset-0" />
